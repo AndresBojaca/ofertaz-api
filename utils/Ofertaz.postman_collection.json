@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "f4f36a0e-ea81-4bd6-94f7-f278fe813104",
+		"name": "Ofertaz",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14512534"
+	},
+	"item": [
+		{
+			"name": "Auth Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"andresfelipebs@outlook.com\",\r\n  \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ofertas",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiaWF0IjoxNzIwNTUzNzE0LCJleHAiOjE3MjA1NTczMTR9.ajFXxVNud6lUPZ7ntwNQsCxiTUMSRVAq-HtJa71zKiU",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/jobOffers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"jobOffers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Oferta",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiaWF0IjoxNzIwNTUzNzE0LCJleHAiOjE3MjA1NTczMTR9.ajFXxVNud6lUPZ7ntwNQsCxiTUMSRVAq-HtJa71zKiU",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/jobOffers/:id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"jobOffers",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Nueva Oferta",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiaWF0IjoxNzIwMzQwODY0LCJleHAiOjE3MjAzNDQ0NjR9.8BJd8uuwQxFKi11VlXOG2jGmz08H6MdMQxrxlESGbY8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Ingeniero DevOps\",\r\n  \"description\": \"Buscamos un ingeniero DevOps para mejorar y mantener nuestra infraestructura de despliegue y operaciones.\",\r\n  \"position\": \"DevOps Engineer\",\r\n  \"date\": \"2024-07-06T00:00:00.000Z\",\r\n  \"role\": \"Engineer\",\r\n  \"level\": \"Senior\",\r\n  \"contract\": \"Full-time\",\r\n  \"perks\": [\r\n    \"Trabajo remoto\",\r\n    \"Seguro médico\",\r\n    \"Bonos de desempeño\"\r\n  ],\r\n  \"skills\": [\r\n    \"AWS\",\r\n    \"Docker\",\r\n    \"Kubernetes\",\r\n    \"CI/CD\"\r\n  ],\r\n  \"location\": \"Remoto\",\r\n  \"companyId\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/jobOffers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"jobOffers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Companies",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiaWF0IjoxNzIwMzUwMTkzLCJleHAiOjE3MjAzNTM3OTN9.FsuP8G6UZWXuMNYUgqVAPupbw7O4eJUQLyqwGF_k1EU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/company",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Company",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiaWF0IjoxNzIwMzUwMTkzLCJleHAiOjE3MjAzNTM3OTN9.FsuP8G6UZWXuMNYUgqVAPupbw7O4eJUQLyqwGF_k1EU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"name\": \"Green Energy Co.\",\r\n    \"logo\": \"https://example.com/greenenergyco/logo.png\",\r\n    \"website\": \"https://greenenergyco.example.com\",\r\n    \"description\": \"Una empresa dedicada a proporcionar soluciones energéticas sostenibles.\",\r\n    \"industry\": \"Energía\",\r\n    \"size\": \"200-500 empleados\",\r\n    \"founded\": 2012,\r\n    \"location\": \"Seattle, WA\"\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/company",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Applications",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiaWF0IjoxNzIxMzAxNDg4LCJleHAiOjE3MjEzMDUwODh9.Ig_TK1OC6dbhmmtsOlz2vvNwPF2_mD0zo1B3C0lH8Do",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/applications/user/:userId",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"applications",
+						"user",
+						":userId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Application",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiaWF0IjoxNzIxMjkwMjQxLCJleHAiOjE3MjEyOTM4NDF9.TJOZFlSqFXoZ0BYAWliphveLWWJMEMydo1e-20H1VLs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"userId\": 1,\r\n    \"jobOfferId\": 1\r\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/applications/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"applications",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:5000/"
+		}
+	]
+}
