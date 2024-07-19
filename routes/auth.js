@@ -47,7 +47,10 @@ router.post('/register', [
     // Firmar el token
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
       if (err) throw err;
-      res.json({ token, userId: user.id }); // Devuelve también el ID del usuario
+      res.json(
+        {
+          sessionUser: { token: token, user: user }
+        }); // Devuelve también el ID del usuario
     });
   } catch (err) {
     console.error(err.message);
@@ -93,8 +96,7 @@ router.post('/login', [
       res.json(
         {
           sessionUser: { token: token, user: user }
-        }
-      ); // Devuelve también el ID del usuario
+        }); // Devuelve también el ID del usuario
     });
   } catch (err) {
     console.error(err.message);

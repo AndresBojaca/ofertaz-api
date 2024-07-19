@@ -13,7 +13,7 @@ const User = sequelize.define('User', {
   },
   photoUrl: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   email: {
     type: DataTypes.STRING,
