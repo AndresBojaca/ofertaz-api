@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { Application, User, JobOffer, Company } = require('../models');
+const { Application, JobOffer, Company } = require('../models');
 const auth = require('../middleware/authMiddleware');
 
 // Obtener todas las postulaciones de un usuario

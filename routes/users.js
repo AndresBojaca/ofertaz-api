@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User, JobOffer } = require('../models');
+const { User } = require('../models');
 
 // Ruta para obtener todos los usuarios
 router.get('/', async (req, res) => {

@@ -1,3 +1,4 @@
+const Roles = require('./Roles');
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
@@ -18,12 +19,23 @@ const User = sequelize.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  rolesId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Roles,
+      key: 'id'
+    },
+    allowNull: false,
   }
 });
+
+// Definir las relaciones
+User.belongsTo(Roles, { foreignKey: 'rolesId' });
+
 
 module.exports = User;

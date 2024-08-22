@@ -5,7 +5,6 @@ const Company = sequelize.define('Company', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
   logo: {
     type: DataTypes.STRING,
