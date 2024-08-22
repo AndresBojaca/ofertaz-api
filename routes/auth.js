@@ -4,7 +4,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const User = require('../models/User'); // Asegúrate de importar tu modelo de usuario correctamente
+const User = require('../models/User');
+const Roles = require('../models/Roles');
 
 const router = express.Router();
 
@@ -19,17 +20,17 @@ router.post('/register', [
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password } = req.body;
+  const { name, email, password, rolesId } = req.body;
 
   try {
     // Verificar si el usuario ya existe
-    let user = await User.findOne({ where: { email } });
+    let user = await User.findOne({ where: { email }});
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });
     }
 
     // Crear nuevo usuario
-    user = User.build({ name, email, password });
+    user = User.build({ name, email, password, rolesId });
 
     // Hash de la contraseña
     const salt = await bcrypt.genSalt(10);
@@ -44,12 +45,15 @@ router.post('/register', [
       }
     };
 
+    // Consultar nuevo usuario
+    let userCreated = await User.findOne({ where: { email },   include: [{ model: Roles, as: 'Role', attributes: ['id', 'roleDescription']}] });
+
     // Firmar el token
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
       if (err) throw err;
       res.json(
         {
-          sessionUser: { token: token, user: user }
+          sessionUser: { token: token, user: userCreated, role: userCreated.Role.roleDescription }
         }); // Devuelve también el ID del usuario
     });
   } catch (err) {
@@ -72,7 +76,7 @@ router.post('/login', [
 
   try {
     // Verificar si el usuario existe
-    let user = await User.findOne({ where: { email } });
+    let user = await User.findOne({ where: { email },   include: [{ model: Roles, as: 'Role', attributes: ['id', 'roleDescription']}] });
     if (!user) {
       return res.status(400).json({ msg: 'Invalid Credentials' });
     }
@@ -95,7 +99,7 @@ router.post('/login', [
       if (err) throw err;
       res.json(
         {
-          sessionUser: { token: token, user: user }
+          sessionUser: { token: token, user: user, role: user.Role.roleDescription }
         }); // Devuelve también el ID del usuario
     });
   } catch (err) {
