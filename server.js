@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const { sequelize } = require('./models');
+const { dbConfig } = require('./models');
 
 // Configurar dotenv para manejar variables de entorno
 dotenv.config();
@@ -16,12 +16,12 @@ app.use(cors());
 app.use(express.json());
 
 // Conectar a la base de datos
-sequelize.authenticate()
+dbConfig.authenticate()
   .then(() => console.log('Conectado a MySQL...'))
   .catch(err => console.log('Error al conectar a MySQL:', err));
 
 // Sincronizar modelos con la base de datos
-sequelize.sync({ alter: true })
+dbConfig.sync({ alter: true })
   .then(() => console.log('Modelos sincronizados con la base de datos'))
   .catch(err => console.log('Error al sincronizar modelos:', err));
 
