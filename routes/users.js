@@ -1,4 +1,5 @@
 const express = require('express');
+const verifyToken = require('../middleware/authMiddleware');
 const router = express.Router();
 const { User } = require('../models');
 
@@ -21,6 +22,20 @@ router.post('/', async (req, res) => {
     res.status(201).json(user);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// Ruta protegida para obtener datos del usuario
+router.get('/user', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 });
 

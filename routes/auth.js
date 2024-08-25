@@ -1,6 +1,7 @@
 // api/auth.js
 
 const express = require('express');
+const transporter = require('../config/email');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
@@ -24,7 +25,7 @@ router.post('/register', [
 
   try {
     // Verificar si el usuario ya existe
-    let user = await User.findOne({ where: { email }});
+    let user = await User.findOne({ where: { email } });
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });
     }
@@ -46,15 +47,30 @@ router.post('/register', [
     };
 
     // Consultar nuevo usuario
-    let userCreated = await User.findOne({ where: { email },   include: [{ model: Roles, as: 'Role', attributes: ['id', 'roleDescription']}] });
+    let userCreated = await User.findOne({ where: { email }, include: [{ model: Roles, as: 'Role', attributes: ['id', 'roleDescription'] }] });
 
     // Firmar el token
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, async (err, token) => {
       if (err) throw err;
-      res.json(
-        {
-          sessionUser: { token: token, user: userCreated, role: userCreated.Role.roleDescription }
-        }); // Devuelve también el ID del usuario
+
+      // Envía el email de confirmación
+      const confirmUrl = `${process.env.FRONTEND_URL}/confirmAccount/${token}`; // URL de confirmación con el token
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: 'Confirma tu cuenta',
+        html: `<h1>Confirma tu cuenta</h1>
+               <p>Hola ${user.name}, por favor confirma tu cuenta haciendo click en el siguiente enlace:</p>
+               <a href="${confirmUrl}">Confirmar cuenta</a>`
+      };
+
+      try {
+        await transporter.sendMail(mailOptions);
+        res.json({ token });
+      } catch (error) {
+        console.error('Error al enviar el email:', error);
+        res.status(500).send('Error al enviar el email');
+      }
     });
   } catch (err) {
     console.error(err.message);
@@ -76,7 +92,7 @@ router.post('/login', [
 
   try {
     // Verificar si el usuario existe
-    let user = await User.findOne({ where: { email },   include: [{ model: Roles, as: 'Role', attributes: ['id', 'roleDescription']}] });
+    let user = await User.findOne({ where: { email }, include: [{ model: Roles, as: 'Role', attributes: ['id', 'roleDescription'] }] });
     if (!user) {
       return res.status(400).json({ msg: 'Invalid Credentials' });
     }
@@ -108,35 +124,26 @@ router.post('/login', [
   }
 });
 
-// Middleware para verificar token activo
-const verifyToken = (req, res, next) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(401).json({ msg: 'No token, authorization denied' });
-  }
-
+router.post('/confirm', async (req, res) => {
   try {
+    const { token } = req.body;
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user;
-    next();
-  } catch (err) {
-    res.status(401).json({ msg: 'Token is not valid' });
-  }
-};
+    const user = await User.findByPk(decoded.user.id);
 
-// Ruta protegida para obtener datos del usuario
-router.get('/user', verifyToken, async (req, res) => {
-  try {
-    const user = await User.findByPk(req.user.id);
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
+    if (!user || user.confirmed) {
+      return res.status(400).json({ msg: 'Invalid or expired token' });
     }
-    res.json(user);
+
+    user.confirmed = true;
+    await user.save();
+
+    res.json({ msg: 'Account confirmed successfully' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    res.status(400).send('Invalid token');
   }
 });
+
+
 
 module.exports = router;
