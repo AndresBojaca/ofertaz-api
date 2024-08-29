@@ -24,6 +24,14 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  country: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  confirmed: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false
+  },
   rolesId: {
     type: DataTypes.INTEGER,
     references: {

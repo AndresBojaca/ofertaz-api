@@ -21,7 +21,7 @@ router.post('/register', [
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, rolesId } = req.body;
+  const { name, email, password, rolesId, confirmed, country } = req.body;
 
   try {
     // Verificar si el usuario ya existe
@@ -31,7 +31,7 @@ router.post('/register', [
     }
 
     // Crear nuevo usuario
-    user = User.build({ name, email, password, rolesId });
+    user = User.build({ name, email, password, rolesId, confirmed, country });
 
     // Hash de la contraseña
     const salt = await bcrypt.genSalt(10);
@@ -47,14 +47,14 @@ router.post('/register', [
     };
 
     // Consultar nuevo usuario
-    let userCreated = await User.findOne({ where: { email }, include: [{ model: Roles, as: 'Role', attributes: ['id', 'roleDescription'] }] });
+    const userCreated = await User.findOne({ where: { email }, include: [{ model: Roles, as: 'Role', attributes: ['id', 'roleDescription'] }] });
 
     // Firmar el token
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, async (err, token) => {
       if (err) throw err;
 
       // Envía el email de confirmación
-      const confirmUrl = `${process.env.FRONTEND_URL}/confirmAccount/${token}`; // URL de confirmación con el token
+      const confirmUrl = `${process.env.FRONTEND_URL}/confirmccount/${token}`; // URL de confirmación con el token
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
@@ -66,7 +66,10 @@ router.post('/register', [
 
       try {
         await transporter.sendMail(mailOptions);
-        res.json({ token });
+        res.json(
+          {
+            sessionUser: { token: token, user: userCreated, role: userCreated.Role.roleDescription }
+          }); // Devuelve también el ID del usuario
       } catch (error) {
         console.error('Error al enviar el email:', error);
         res.status(500).send('Error al enviar el email');
