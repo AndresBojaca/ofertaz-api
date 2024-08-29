@@ -54,7 +54,7 @@ router.post('/register', [
       if (err) throw err;
 
       // Envía el email de confirmación
-      const confirmUrl = `${process.env.FRONTEND_URL}/confirmccount/${token}`; // URL de confirmación con el token
+      const confirmUrl = `${process.env.FRONTEND_URL}/confirm-account/${token}`; // URL de confirmación con el token
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: user.email,
